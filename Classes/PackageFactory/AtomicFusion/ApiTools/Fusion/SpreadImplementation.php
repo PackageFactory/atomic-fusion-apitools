@@ -52,7 +52,7 @@ class SpreadImplementation extends AbstractApiHelperImplementation
 		}
 	}
 
-	public function evaluate()
+	protected function renderStructure()
 	{
 		$this->validatePathes();
 
@@ -72,11 +72,11 @@ class SpreadImplementation extends AbstractApiHelperImplementation
 			$this->tsRuntime->pushContextArray($context);
 			if ($this->tsRuntime->canRender($this->path . '/keyRenderer')) {
 				$renderedKey = $this->tsRuntime->render($this->path . '/keyRenderer');
-				$result .= rtrim($this->yamlService->stringify([$renderedKey => []]), '{ }' . PHP_EOL);
+				$result .= rtrim($this->yamlService->stringify([$renderedKey => []]), '{ }' . PHP_EOL) . ' #';
 			} else {
-				$result .= '-';
+				$result .= '- #';
 			}
-            $result .= PHP_EOL . $this->indentOutput($this->tsRuntime->render($this->path . '/itemRenderer'));
+            $result .= $this->indentOutput($this->tsRuntime->render($this->path . '/itemRenderer'));
             $this->tsRuntime->popContext();
 		}
 

@@ -25,7 +25,7 @@ class ArrayImplementation extends AbstractApiHelperImplementation
 
 	protected static $prototypeName = self::PROTOTYPE;
 
-	public function evaluate()
+	protected function renderStructure()
 	{
 		$keys = $this->sortNestedTypoScriptKeys();
 		$collectedItems = [];
@@ -36,7 +36,7 @@ class ArrayImplementation extends AbstractApiHelperImplementation
 				if (count($collectedItems)) {
 					$result .= $this->yamlService->stringify($collectedItems);
 				}
-				$result .= '-' . PHP_EOL . $this->renderNestedApiHelper($key);
+				$result .= '- #' . $this->renderNestedApiHelper($key);
 
 				$collectedItems = [];
 				continue;

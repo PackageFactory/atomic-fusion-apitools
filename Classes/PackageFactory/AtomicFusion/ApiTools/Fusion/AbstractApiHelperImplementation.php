@@ -12,6 +12,7 @@ namespace PackageFactory\AtomicFusion\ApiTools\Fusion;
  */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\TypoScript\Core\Cache\ContentCache;
 use TYPO3\TypoScript\TypoScriptObjects\ArrayImplementation;
 use PackageFactory\AtomicFusion\ApiTools\Service\Yaml\ServiceInterface as YamlServiceInterface;
 use PackageFactory\AtomicFusion\ApiTools\Service\FusionReflectionService;
@@ -19,6 +20,7 @@ use PackageFactory\AtomicFusion\ApiTools\Service\FusionReflectionService;
 abstract class AbstractApiHelperImplementation extends ArrayImplementation
 {
 	use ReflectionTrait;
+	use EndpointTrait;
 
 	/**
 	 * An abstract fusion prototype for all Api helpers to inherit from
@@ -34,7 +36,7 @@ abstract class AbstractApiHelperImplementation extends ArrayImplementation
 	protected $yamlService;
 
 	/**
-	 * Determine wehter a certain subpath is a nested Api helper of the syme type
+	 * Determine wehter a certain subpath is a nested Api helper of the same type
 	 *
 	 * @param $key
 	 * @return boolean
@@ -57,6 +59,12 @@ abstract class AbstractApiHelperImplementation extends ArrayImplementation
 		);
 	}
 
+	/**
+	 * Render a nested Api helper
+	 *
+	 * @param $key
+	 * @return boolean
+	 */
 	protected function renderNestedApiHelper($key)
 	{
 		$propertyName = static::$prototypeName;
@@ -76,15 +84,62 @@ abstract class AbstractApiHelperImplementation extends ArrayImplementation
 		return $this->indentOutput($yaml);
 	}
 
+	/**
+	 * Increase the indentation of the given string
+	 * TODO: Refactor, move to Utility class
+	 *
+	 * @param string $yaml
+	 * @return string
+	 */
 	protected function indentOutput($yaml)
 	{
 		$lines = explode(PHP_EOL, $yaml);
 
+
 		foreach ($lines as &$line) {
+			if (strpos($line, ContentCache::CACHE_SEGMENT_END_TOKEN) !== false) {
+				if ($line{0} !== '#') {
+					$line = '#' . $line;
+				}
+				continue;
+			}
+
 			if (trim($line)) {
 				$line = '  ' . $line;
 			}
 		}
+
 		return implode(PHP_EOL, $lines);
+	}
+
+	/**
+	 * Acutual Api helper evaluation
+	 *
+	 * @return string
+	 */
+	abstract protected function renderStructure();
+
+	public function evaluate()
+	{
+		//
+		// Endpoint pre-processing
+		//
+		if ($value = $this->renderEndpointDeflationValue()) {
+			return $value;
+		}
+
+		//
+		// Rendering
+		//
+		$yaml = PHP_EOL . $this->renderStructure();
+
+		//
+		// Endpoint post-processing
+		//
+		if ($this->endpointShouldPostProcess()) {
+			return $this->convertToEndpointFormat($yaml);
+		}
+
+		return $yaml;
 	}
 }
