@@ -11,13 +11,12 @@ namespace PackageFactory\AtomicFusion\ApiTools\Fusion;
  * source code.
  */
 
-use TYPO3\TypoScript\TypoScriptObjects\AbstractTypoScriptObject;
 use TYPO3\Flow\Annotations as Flow;
 
 /**
  * A Fusion Object to represent arbitrary dictionaries
  */
-class DictionaryImplementation extends AbstractTypoScriptObject
+class DictionaryImplementation extends AbstractApiHelperImplementation
 {
 
 }

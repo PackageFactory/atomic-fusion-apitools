@@ -11,13 +11,12 @@ namespace PackageFactory\AtomicFusion\ApiTools\Fusion;
  * source code.
  */
 
-use TYPO3\TypoScript\TypoScriptObjects\AbstractTypoScriptObject;
 use TYPO3\Flow\Annotations as Flow;
 
 /**
  * A Fusion Object to help spread lists and objects
  */
-class SpreadImplementation extends AbstractTypoScriptObject
+class SpreadImplementation extends AbstractApiHelperImplementation
 {
 
 }
