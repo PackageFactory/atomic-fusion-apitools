@@ -8,3 +8,6 @@ prototype(PackageFactory.AtomicFusion.ApiTools:Array) < prototype(PackageFactory
 prototype(PackageFactory.AtomicFusion.ApiTools:Dictionary) < prototype(PackageFactory.AtomicFusion.ApiTools:Abstract) {
 	@class = 'PackageFactory\\AtomicFusion\\ApiTools\\Fusion\\DictionaryImplementation'
 }
+prototype(PackageFactory.AtomicFusion.ApiTools:Spread) < prototype(PackageFactory.AtomicFusion.ApiTools:Abstract) {
+	@class = 'PackageFactory\\AtomicFusion\\ApiTools\\Fusion\\SpreadImplementation'
+}

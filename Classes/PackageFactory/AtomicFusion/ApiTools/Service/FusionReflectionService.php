@@ -65,7 +65,7 @@ class FusionReflectionService
 
 		$fusionConfiguration = $this->getFusionConfigurationFromRuntime($runtime);
 
-		return in_array(
+		return isset($fusionConfiguration['__prototypes'][$prototypeName]['__prototypeChain']) && in_array(
 			$parentPrototypeName,
 			$fusionConfiguration['__prototypes'][$prototypeName]['__prototypeChain']
 		);
