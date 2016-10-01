@@ -37,10 +37,10 @@ class SymfonyYamlService implements ServiceInterface
 	 */
 	public function stringify($jsonSerializable)
 	{
-		$this->checkForYamlExtension();
-		
+		$this->checkJsonSerializable($jsonSerializable);
+
 		try {
-			return Yaml::dump($yamlString);
+			return Yaml::dump($jsonSerializable);
 		} catch (\Exception $e) {
 			throw new Exception('Failed to convert value', 1475310803);
 		}

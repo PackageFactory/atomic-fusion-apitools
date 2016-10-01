@@ -1,0 +1,7 @@
+prototype(PackageFactory.AtomicFusion.ApiTools:Abstract) {
+	@class = ''
+}
+
+prototype(PackageFactory.AtomicFusion.ApiTools:Array) < prototype(PackageFactory.AtomicFusion.ApiTools:Abstract) {
+	@class = 'PackageFactory\\AtomicFusion\\ApiTools\\Fusion\\ArrayImplementation'
+}

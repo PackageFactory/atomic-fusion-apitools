@@ -1,0 +1,2 @@
+PackageFactory\AtomicFusion\ApiTools\Service\Yaml\ServiceInterface:
+  className: PackageFactory\AtomicFusion\ApiTools\Service\Yaml\SymfonyYamlService

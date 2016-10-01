@@ -12,39 +12,53 @@ namespace PackageFactory\AtomicFusion\ApiTools\Fusion;
  */
 
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\TypoScript\TypoScriptObjects\AbstractTypoScriptObject;
+use TYPO3\TypoScript\TypoScriptObjects\ArrayImplementation;
 use PackageFactory\AtomicFusion\ApiTools\Service\Yaml\ServiceInterface as YamlServiceInterface;
+use PackageFactory\AtomicFusion\ApiTools\Service\FusionReflectionService;
 
-abstract class AbstractApiHelperImplementation extends AbstractTypoScriptObject
+abstract class AbstractApiHelperImplementation extends ArrayImplementation
 {
+	use ReflectionTrait;
+
+	/**
+	 * An abstract fusion prototype for all Api helpers to inherit from
+	 */
+	const ABSTRACT_PROTOTYPE = 'PackageFactory.AtomicFusion.ApiTools:Abstract';
+
 	/**
 	 * @Flow\Inject
 	 * @var YamlServiceInterface
 	 */
 	protected $yamlService;
 
-	/**
-	 * Render a data structure from the given fusion configuration
-	 *
-	 * @return mixed
-	 */
-	abstract public function renderStructure();
 
-	/**
-	 * Each Api Helper must provide a method `renderStructure`, which's return value will be
-	 * yaml-parsed and properly indented in the `evaluate` method.
-	 *
-	 * @return string
-	 */
-	public function evaluate()
+	protected function isNestedApiHelper($key)
 	{
-		$structure = $this->renderStructure();
-		$yaml = $this->yamlService->stringify($structure);
+		if (isset($this->properties[$key]) && isset($this->properties[$key]['__objectType'])) {
+			return $this->prototypeInheritsFrom($this->properties[$key]['__objectType'], self::ABSTRACT_PROTOTYPE);
+		}
 
-		//
-		// TODO: Handle indentation
-		//
+		return false;
+	}
 
-		return $yaml;
+	protected function renderNestedApiHelper($key)
+	{
+		$yaml = $this->tsRuntime->render(
+			sprintf('%s/%s', $this->path, $key)
+		);
+
+		return $this->indentOutput($yaml);
+	}
+
+	protected function indentOutput($yaml)
+	{
+		$lines = explode(PHP_EOL, $yaml);
+
+		foreach ($lines as &$line) {
+			if (trim($line)) {
+				$line = '  ' . $line;
+			}
+		}
+		return implode(PHP_EOL, $lines);
 	}
 }

@@ -41,7 +41,7 @@ class NativeYamlService implements ServiceInterface
 		$this->checkJsonSerializable($jsonSerializable);
 
 		try {
-			return \yaml_emit($yamlString);
+			return \yaml_emit($jsonSerializable);
 		} catch (\Exception $e) {
 			throw new Exception('Failed to convert value', 1475310434);
 		}
