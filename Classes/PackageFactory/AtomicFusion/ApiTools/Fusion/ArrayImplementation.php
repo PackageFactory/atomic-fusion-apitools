@@ -18,6 +18,13 @@ use TYPO3\Flow\Annotations as Flow;
  */
 class ArrayImplementation extends AbstractApiHelperImplementation
 {
+	/**
+	 * Base Prototype name for this fusion object
+	 */
+	const PROTOTYPE = 'PackageFactory.AtomicFusion.ApiTools:Array';
+
+	protected static $prototypeName = self::PROTOTYPE;
+
 	public function evaluate()
 	{
 		$keys = $this->sortNestedTypoScriptKeys();
@@ -26,8 +33,10 @@ class ArrayImplementation extends AbstractApiHelperImplementation
 
 		foreach ($keys as $key) {
 			if ($this->isNestedApiHelper($key)) {
-				$result .= $this->yamlService->stringify($collectedItems);
-				$result .= $this->renderNestedApiHelper($key);
+				if (count($collectedItems)) {
+					$result .= $this->yamlService->stringify($collectedItems);
+				}
+				$result .= '-' . PHP_EOL . $this->renderNestedApiHelper($key);
 
 				$collectedItems = [];
 				continue;

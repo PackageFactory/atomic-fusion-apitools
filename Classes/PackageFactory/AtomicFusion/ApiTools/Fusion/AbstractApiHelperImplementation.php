@@ -25,26 +25,42 @@ abstract class AbstractApiHelperImplementation extends ArrayImplementation
 	 */
 	const ABSTRACT_PROTOTYPE = 'PackageFactory.AtomicFusion.ApiTools:Abstract';
 
+	protected static $prototypeName = self::ABSTRACT_PROTOTYPE;
+
 	/**
 	 * @Flow\Inject
 	 * @var YamlServiceInterface
 	 */
 	protected $yamlService;
 
-
+	/**
+	 * Determine wehter a certain subpath is a nested Api helper of the syme type
+	 *
+	 * @param $key
+	 * @return boolean
+	 */
 	protected function isNestedApiHelper($key)
 	{
-		if (isset($this->properties[$key]) && isset($this->properties[$key]['__objectType'])) {
-			return $this->prototypeInheritsFrom($this->properties[$key]['__objectType'], self::ABSTRACT_PROTOTYPE);
+		if (
+			isset($this->properties[$key]) &&
+			is_array($this->properties[$key]) &&
+			!empty($this->properties[$key]['__objectType'])
+		) {
+			return $this->prototypeInheritsFrom($this->properties[$key]['__objectType'], static::$prototypeName);
 		}
 
-		return false;
+		return (
+			isset($this->properties[$key]) &&
+			is_array($this->properties[$key]) &&
+			empty($this->properties[$key]['__eelExpression']) &&
+			empty($this->properties[$key]['__value'])
+		);
 	}
 
 	protected function renderNestedApiHelper($key)
 	{
 		$yaml = $this->tsRuntime->render(
-			sprintf('%s/%s', $this->path, $key)
+			sprintf('%s/%s<%s>', $this->path, $key, static::$prototypeName)
 		);
 
 		return $this->indentOutput($yaml);

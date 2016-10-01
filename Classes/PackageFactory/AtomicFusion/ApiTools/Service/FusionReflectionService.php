@@ -59,6 +59,10 @@ class FusionReflectionService
 			return false;
 		}
 
+		if ($prototypeName === $parentPrototypeName) {
+			return true;
+		}
+
 		$fusionConfiguration = $this->getFusionConfigurationFromRuntime($runtime);
 
 		return in_array(
