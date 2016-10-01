@@ -46,7 +46,7 @@ abstract class AbstractApiHelperImplementation extends ArrayImplementation
 			is_array($this->properties[$key]) &&
 			!empty($this->properties[$key]['__objectType'])
 		) {
-			return $this->prototypeInheritsFrom($this->properties[$key]['__objectType'], static::$prototypeName);
+			return $this->prototypeInheritsFrom($this->properties[$key]['__objectType'], self::ABSTRACT_PROTOTYPE);
 		}
 
 		return (
@@ -59,8 +59,18 @@ abstract class AbstractApiHelperImplementation extends ArrayImplementation
 
 	protected function renderNestedApiHelper($key)
 	{
+		$propertyName = static::$prototypeName;
+
+		if (
+			isset($this->properties[$key]) &&
+			is_array($this->properties[$key]) &&
+			!empty($this->properties[$key]['__objectType'])
+		) {
+			$propertyName = $this->properties[$key]['__objectType'];
+		}
+
 		$yaml = $this->tsRuntime->render(
-			sprintf('%s/%s<%s>', $this->path, $key, static::$prototypeName)
+			sprintf('%s/%s<%s>', $this->path, $key, $propertyName)
 		);
 
 		return $this->indentOutput($yaml);

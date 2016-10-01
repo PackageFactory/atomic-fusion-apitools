@@ -5,3 +5,6 @@ prototype(PackageFactory.AtomicFusion.ApiTools:Abstract) {
 prototype(PackageFactory.AtomicFusion.ApiTools:Array) < prototype(PackageFactory.AtomicFusion.ApiTools:Abstract) {
 	@class = 'PackageFactory\\AtomicFusion\\ApiTools\\Fusion\\ArrayImplementation'
 }
+prototype(PackageFactory.AtomicFusion.ApiTools:Dictionary) < prototype(PackageFactory.AtomicFusion.ApiTools:Abstract) {
+	@class = 'PackageFactory\\AtomicFusion\\ApiTools\\Fusion\\DictionaryImplementation'
+}
