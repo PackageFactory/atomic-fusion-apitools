@@ -99,7 +99,7 @@ abstract class AbstractApiHelperImplementation extends ArrayImplementation
 		foreach ($lines as &$line) {
 			if (strpos($line, ContentCache::CACHE_SEGMENT_END_TOKEN) !== false) {
 				if ($line{0} !== '#') {
-					$line = '#' . $line;
+					$line = '#' . $line . PHP_EOL;
 				}
 				continue;
 			}
